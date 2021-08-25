@@ -32,14 +32,42 @@ func TestMaxArea(t *testing.T) {
 	}
 }
 
+// todo test
 func TestFindMedianOfSortedArrays2(t *testing.T) {
 
 }
 
+// todo test
 func TestThreeSum(t *testing.T) {
 
 }
 
+// todo test
 func TestThreeSumClosest(t *testing.T) {
+
+}
+
+// todo test
+func TestFourSum(t *testing.T) {
+
+}
+
+// todo test
+func TestRemoveDuplicates1(t *testing.T) {
+
+}
+
+// todo test
+func TestRemoveDuplicates2(t *testing.T) {
+
+}
+
+// todo test
+func TestRemoveElement1(t *testing.T) {
+
+}
+
+// todo test
+func TestRemoveElement2(t *testing.T) {
 
 }

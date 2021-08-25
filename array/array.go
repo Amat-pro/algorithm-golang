@@ -162,6 +162,7 @@ func threeSum(nums []int) [][]int {
 func threeSumClosest(nums []int, target int) int {
 	sort.Ints(nums)
 	n := len(nums)
+	// todo Bit Operation
 	minAbs := 1<<31 - 1
 	minSum := 0
 
@@ -195,4 +196,130 @@ func abs(i int) int {
 		return -i
 	}
 	return i
+}
+
+// 6.
+// question: four sum
+// description: 给定一个包含 n 个整数的数组 nums 和一个目标值 target，判断 nums 中是否存在四个元素 a，b，c 和 d ，使得 a + b + c + d
+// 的值与 target 相等？找出所有满足条件且不重复的四元组
+// note: 答案中不可以包含重复的四元组
+//
+// N 数之和的本质是，在有序数组内，寻找 N 个数的和恰好是 S
+// 解决办法还是 3sum 3sum_closest 的双指针法，不过需要外部 N-2 层循环，内部双指针循环即可
+// 注意双指针在遍历时外部所有循环要去重，指针移动时也要去重
+//
+func fourSum(nums []int, target int) [][]int {
+	sort.Ints(nums)
+	n := len(nums)
+	var res [][]int
+
+	for i := 0; i < n-1; i++ {
+		if i > 0 && nums[i] == nums[i-1] { // 去重1
+			continue
+		}
+		for j := i + 1; j < n; j++ {
+			if j > i+1 && nums[j] == nums[j-1] { // 去重2    // 注意条件：j>i+1 与 i>0 相同都是为了排除第一个相同数
+				continue
+			}
+			head, tail := j+1, n-1
+			for head < tail {
+				sum := nums[i] + nums[j] + nums[head] + nums[tail]
+				switch {
+				case sum < target: // 向后走
+					head++
+				case sum > target: // 向前走
+					tail--
+				case sum == target: // 向前向后走
+					res = append(res, []int{nums[i], nums[j], nums[head], nums[tail]})
+					// 去重3：注意 for 循环条件的判断，避开死循环
+					for head < tail && nums[head] == nums[head+1] {
+						head++
+					}
+					for head < tail && nums[tail] == nums[tail-1] {
+						tail--
+					}
+					head++
+					tail--
+				}
+			}
+		}
+	}
+	return res
+}
+
+// 7.
+// question: remove duplicates from sorted arrays
+// description: 给你一个有序数组 nums ，请你 原地 删除重复出现的元素，使每个元素 只出现一次 ，返回删除后数组的新长度
+// note: 不要使用额外的数组空间，你必须在 原地 修改输入数组 并在使用 O(1) 额外空间的条件下完成
+
+// 针对有序数组，双指针法是十分常见且有用的
+func removeDuplicates1(nums []int) int {
+	slow, fast := 0, 0
+	for fast < len(nums)-1 {
+		if nums[fast] != nums[fast+1] { // 相邻的数不相等
+			slow++
+			fast++
+			nums[slow] = nums[fast] // 将最新的新数存储到慢指针的位置
+			continue
+		}
+		fast++
+	}
+	return slow + 1
+}
+
+// 充分利用数组有序的已知条件
+func removeDuplicates2(nums []int) int {
+	n := len(nums)
+	l, r := 0, 1
+	for r < n {
+		if nums[l] < nums[r] { // 比我大就放到我的下一个
+			l++
+			nums[l], nums[r] = nums[r], nums[l]
+		}
+		r++
+	}
+	return l + 1
+}
+
+// 8.
+// question: remove element
+// description: 给你一个数组 nums 和一个值 val，你需要 原地 移除所有数值等于 val 的元素，并返回移除后数组的新长度
+// note: 不要使用额外的数组空间，你必须仅使用 O(1) 额外空间并 原地 修改输入数组。 元素的顺序可以改变。你不需要考虑数组中超出新长度后面的元素
+
+// 遍历数组一如既往地联想到双指针法
+func removeElement1(nums []int, val int) int {
+	slow := 0
+	for fast := 0; fast < len(nums); fast++ {
+		if nums[fast] != val {
+			nums[slow] = nums[fast] // 快指针在前，慢指针在后，遇到不等的元素就放到慢指针的位置
+			slow++
+		}
+	}
+	return slow
+}
+
+// 类似 26 的解法
+func removeElement2(nums []int, val int) int {
+	slow, fast := 0, 0
+	for fast < len(nums) {
+		if nums[fast] != val {
+			if slow != fast {
+				nums[slow] = nums[fast]
+			}
+			slow++
+			fast++
+			continue
+		}
+		fast++
+	}
+	return slow
+}
+
+// 9.
+// question: next
+// description: 实现获取 下一个排列 的函数，算法需要将给定数字序列重新排列成字典序中下一个更大的排列。
+// 如果不存在下一个更大的排列，则将数字重新排列成最小的排列（即升序排列）
+// note: 必须 原地 修改，只允许使用额外常数空间
+func nextPermutation(nums []int) {
+
 }
