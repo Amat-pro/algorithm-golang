@@ -39,3 +39,7 @@ func TestFindMedianOfSortedArrays2(t *testing.T) {
 func TestThreeSum(t *testing.T) {
 
 }
+
+func TestThreeSumClosest(t *testing.T) {
+
+}

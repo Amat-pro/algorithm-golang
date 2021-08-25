@@ -1,6 +1,8 @@
 package array
 
-import "sort"
+import (
+	"sort"
+)
 
 // 1.
 // question: two sum
@@ -20,8 +22,8 @@ func twoSum(nums []int, target int) []int {
 
 // 2.
 // question: container with most water
-// description: 给你 n 个非负整数 a1，a2，…，an，每个数代表坐标中的一个点 (i, ai) 。在坐标内画 n 条垂直线，垂直线 i 的两个端点分别为 (i, ai)
-// 和 (i, 0) 。找出其中的两条线，使得它们与 x 轴共同构成的容器可以容纳最多的水。    说明：你不能倾斜容器。
+// description: 给你 n 个非负整数 a1，a2，…，an，每个数代表坐标中的一个点 (i, ai) 。在坐标内画 n 条垂直线，垂直线 i 的两个端点分别为
+// (i, ai) 和 (i, 0) 。找出其中的两条线，使得它们与 x 轴共同构成的容器可以容纳最多的水。    说明：你不能倾斜容器。
 func maxArea(height []int) int {
 	// step one: validated
 	maxMulti := 0
@@ -149,4 +151,48 @@ func threeSum(nums []int) [][]int {
 		}
 	}
 	return res
+}
+
+// 5.
+// question: three sum closest
+// description: 给定一个包括 n 个整数的数组 nums 和 一个目标值 target。找出 nums 中的三个整数，使得它们的和与 target 最接近。返回这三个
+// 数的和。假定每组输入只存在唯一答案。
+// 同样也是指针法
+// 和 15 一样，排序预处理能知道双指针移动的方向，记录最小 abs
+func threeSumClosest(nums []int, target int) int {
+	sort.Ints(nums)
+	n := len(nums)
+	minAbs := 1<<31 - 1
+	minSum := 0
+
+	for i, num := range nums {
+		if i > 0 && nums[i] == nums[i-1] { // 优化：可选的去重
+			continue
+		}
+
+		l, r := i+1, n-1
+		for l < r {
+			sum := num + nums[l] + nums[r]
+			if abs(target-sum) < minAbs {
+				minAbs = abs(target - sum)
+				minSum = sum
+			}
+			switch {
+			case sum < target:
+				l++
+			case sum > target:
+				r--
+			default:
+				return target
+			}
+		}
+	}
+	return minSum
+}
+
+func abs(i int) int {
+	if i < 0 {
+		return -i
+	}
+	return i
 }
