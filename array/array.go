@@ -1,5 +1,7 @@
 package array
 
+import "sort"
+
 // 1.
 // question: two sum
 // description: 给定一个整数数组 nums 和一个整数目标值 target，请你在该数组中找出 和为目标值 的那 两个 整数，并返回它们的数组下标
@@ -55,7 +57,7 @@ func findMedianOOfSortedArrays1(nums1 []int, nums2 []int) float64 {
 }
 
 // method two:  分治策略 -> complexity(TIME): O(log(M+N))
-func findMedianOOfSortedArrays2(nums1 []int, nums2 []int) float64 {
+func findMedianOfSortedArrays2(nums1 []int, nums2 []int) float64 {
 	// step one: validated
 	// make len(nums1) <= len(nums2)
 
@@ -63,7 +65,14 @@ func findMedianOOfSortedArrays2(nums1 []int, nums2 []int) float64 {
 	// find the kth1 in nums1 and find the kth2 in nums2
 	// if kth1 < kth2 then remove the elements before kth1 which in nums1 and keep going on finding (k-kth1)th
 
-	return 0
+	// find kth or kth, k+1th according to odd-even
+	len := len(nums1) + len(nums2)
+	if len%2 != 0 {
+		return float64(findKth(nums1, nums2, len/2))
+	}
+	kth := len / 2
+	kth1 := (len + 1) / 2
+	return float64((findKth(nums1, nums2, kth) + findKth(nums1, nums2, kth1)) / 2)
 }
 
 func findKth(nums1, nums2 []int, k int) int {
@@ -97,3 +106,47 @@ func findKth(nums1, nums2 []int, k int) int {
 }
 
 // 4.
+// question: three sum
+// description:  给你一个包含 n 个整数的数组 nums，判断 nums 中是否存在三个元素 a，b，c ，使得 a + b + c = 0 ？请你找出所有和为 0
+// 且不重复的三元组
+// note: 答案中不可以包含重复的三元组
+// 处理结果与元素原顺序无关，可排序预处理，方便去重
+// 使用双指针遍历后部分剩余数组
+func threeSum(nums []int) [][]int {
+	sort.Ints(nums) // [-4 -1 -1 0 1 2] // 预排序有 2 个好处：去重 & 指导双指针的下一步方向
+	n := len(nums)
+	var res [][]int
+	for i, num := range nums {
+		if num > 0 {
+			break // 优化，再往后三个正数和不可能为 0
+		}
+
+		// 第一层遍历数向前去重
+		if i > 0 && nums[i] == nums[i-1] { // 因为双指针从 i 之后取，不能使用 nums[i] == nums[i+1] 向后去重
+			continue
+		}
+
+		l, r := i+1, n-1
+		for l < r {
+			sum := num + nums[l] + nums[r]
+			switch {
+			case sum > 0:
+				r--
+			case sum < 0:
+				l++
+			default:
+				res = append(res, []int{num, nums[l], nums[r]})
+				// 第二层候选数向后去重
+				for l < r && nums[l] == nums[l+1] {
+					l++
+				}
+				for r > l && nums[r] == nums[r-1] {
+					r--
+				}
+				l++
+				r--
+			}
+		}
+	}
+	return res
+}

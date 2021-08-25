@@ -19,6 +19,7 @@ func TestTwoSum(t *testing.T) {
 	}
 }
 
+// example: testing.B
 func BenchmarkTwoSum(b *testing.B) {
 
 }
@@ -29,4 +30,12 @@ func TestMaxArea(t *testing.T) {
 	if maxArea1 != 49 || maxArea2 != 49 {
 		t.Fail()
 	}
+}
+
+func TestFindMedianOfSortedArrays2(t *testing.T) {
+
+}
+
+func TestThreeSum(t *testing.T) {
+
 }
