@@ -6,35 +6,109 @@ import (
 
 func main() {
 
-	a := 5.0
-	b := 2.0
-	fmt.Println(a / b) // output: 2.5
-	fmt.Println(5 / 2) // output: 2
+	/*
+		a := 5.0
+		b := 2.0
+		fmt.Println(a / b) // output: 2.5
+		fmt.Println(5 / 2) // output: 2
 
-	// warn: see the explains in strPointer
-	str := "sss"
-	strPointer(str)  // output: pppp
-	fmt.Println(str) // output: sss
+		// warn: see the explains in strPointer
+		str := "sss"
+		strPointer(str)  // output: pppp
+		fmt.Println(str) // output: sss
 
-	array := [2]int{3, 4}
-	arrayPointer(array) // output: [1 2]
-	fmt.Println(array)  // output: [3 4]
+		array := [2]int{3, 4}
+		arrayPointer(array) // output: [1 2]
+		fmt.Println(array)  // output: [3 4]
 
-	var slice []int
-	slice = []int{3, 5, 6}
-	/**
-	fmt.Println(reflect.TypeOf(slice))
-	fmt.Println(reflect.TypeOf(array))
+		var slice []int
+		slice = []int{3, 5, 6}
+
+		fmt.Println(reflect.TypeOf(slice))
+		fmt.Println(reflect.TypeOf(array))
+
+		slicePointer(slice) // output: [1 2 6]
+		fmt.Println(slice)  // output: [1 2 6]
+
+		inter0 := interImpl0{}
+		inter := interImpl{}
+		// if inter0 is value implement then you can deliver pointer or value
+		// if inter0 is pointer implement then you must deliver pointer
+		inter.inter(&inter0)
+
 	*/
-	slicePointer(slice) // output: [1 2 6]
-	fmt.Println(slice)  // output: [1 2 6]
+	/*
+		fmt.Printf("%b \n", -2)
+		fmt.Printf("%d \n", -2 << 22)
+		// 逻辑右移
+		fmt.Printf("%b \n", 2 >> 3)
+		fmt.Printf("%b \n", -1)
+		fmt.Printf("%b \n", -2 >> 1)
+		fmt.Printf("%d \n", -2 >> 4)
+		// 算数右移->负数符号位为1 发生右移后最高位肯定为1 符号位补1 （打印的第一位： 1： -  0： +）
+		fmt.Printf("%b \n", -20 >> 8)
 
-	inter0 := interImpl0{}
-	inter := interImpl{}
-	// if inter0 is value implement then you can deliver pointer or value
-	// if inter0 is pointer implement then you must deliver pointer
-	inter.inter(&inter0)
+		var i uint8
+		fmt.Println(unsafe.Sizeof(i))
+		i = 255
+		fmt.Printf("%b \n", i >> 2)
 
+		fmt.Printf("%b \n", 9.2233720368548e+18 >> 3)
+
+	*/
+
+	/*
+
+		s := make([]int, 3, 5)
+		// append
+		s[0] = 1
+		s = append(s, 1, 2, 3)
+		s = append(s, 4)
+		fmt.Println(s)
+		fmt.Println(s[0:2])
+
+		var s1 []int
+		_ = s1[:]
+		// panic
+		// fmt.Println(s1[0])
+
+	*/
+
+	test1()
+	// test2()
+	defer func() {
+		if err := recover(); err != nil {
+			fmt.Println("test recover")
+			fmt.Println(err)
+		}
+	}()
+
+}
+
+func test1() {
+	defer func() {
+		fmt.Println("test1 defer1")
+		if err := recover(); err != nil {
+			fmt.Println("test1 recover")
+			fmt.Println(err)
+		}
+	}()
+	defer func() {
+		fmt.Println("test1 defer2")
+		panic("test1 defer panic")
+	}()
+	fmt.Println("test1")
+	panic("test1 panic")
+}
+
+func test2() {
+	defer func() {
+		fmt.Println("test2 defer1")
+	}()
+	defer func() {
+		fmt.Println("test2 defer2")
+	}()
+	fmt.Println("test2")
 }
 
 func strPointer(str string) {
