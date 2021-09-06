@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"sync"
 )
 
 func main() {
@@ -74,14 +75,37 @@ func main() {
 
 	*/
 
-	test1()
-	// test2()
-	defer func() {
-		if err := recover(); err != nil {
-			fmt.Println("test recover")
-			fmt.Println(err)
-		}
-	}()
+	/*
+
+		test1()
+		// test2()
+		defer func() {
+			if err := recover(); err != nil {
+				fmt.Println("test recover")
+				fmt.Println(err)
+			}
+		}()
+
+	*/
+
+	p := &sync.Pool{
+		New: func() interface{} {
+			return 2
+		},
+	}
+	a := p.Get().(int)
+	p.Put(1)
+	p.Put(3)
+	// runtime.GC()
+	b := p.Get().(int)
+	c := p.Get().(int)
+	p.Put(c)
+	// d := p.Get().(int)
+	d := p.Get().(int)
+	// runtime.GC()
+	fmt.Println(a, b, c, d)
+	// runtime.GC()
+	fmt.Println(a, b, c, d)
 
 }
 
